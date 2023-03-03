@@ -5,9 +5,9 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { GetServerSideProps, NextPage } from "next";
+import { useContext } from "react";
 
 import { Input } from "../components/Form/Input";
-import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { withSSRGuest } from '../utils/withSSRGuest';
 

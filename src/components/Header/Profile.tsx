@@ -5,9 +5,10 @@ import { AuthContext } from "../../contexts/AuthContext";
 
 interface ProfileProps {
   showProfileData?: boolean;
+  children?: React.ReactNode | undefined;
 }
 
-export const Profile: NextPage = ({ showProfileData = true }: ProfileProps) => {
+export function Profile({ showProfileData = true }: ProfileProps) {
   const { user } = useContext(AuthContext)
 
   return (
