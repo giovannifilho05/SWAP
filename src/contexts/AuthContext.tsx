@@ -5,7 +5,6 @@ import { auth } from "../services/firebase";
 import { signOut as signOutAuth, User as FirebaseUser } from 'firebase/auth'
 import useFirebaseAuth from "../hooks/useFirebaseAuth";
 
-
 interface User extends FirebaseUser {
   // permissions: string;
   // roles: string[];
