@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { parseCookies, setCookie } from "nookies";
-import { signOut } from "../contexts/AuthContext";
-import { AuthTokenError } from "./errors/AuthTokenError";
+// import { signOut } from "../contexts/AuthContext";
+// import { AuthTokenError } from "./errors/AuthTokenError";
 
 interface FailedRequestQueue {
   onSucess: (token: string) => void;
@@ -62,7 +62,7 @@ export function setupAPIClient(ctx = undefined) {
               failedRequestQueue = []
 
               if (typeof window === 'object') {
-                signOut()
+                // signOut()
               }
             })
             .finally(() => {
@@ -84,9 +84,9 @@ export function setupAPIClient(ctx = undefined) {
         })
       } else {
         if (typeof window === 'object') {
-          signOut()
+          // signOut()
         } else {
-          return Promise.reject(new AuthTokenError())
+          // return Promise.reject(new AuthTokenError())
         }
       }
     }

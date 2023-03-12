@@ -1,25 +1,33 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import dynamic from "next/dynamic";
-import { Box, Flex, SimpleGrid, Text, theme } from "@chakra-ui/react";
-import { ApexOptions } from "apexcharts";
-import { useContext } from "react";
+import { Button, Flex, SimpleGrid } from "@chakra-ui/react";
+import { useEffect } from "react";
 
 import { Header } from "../components/Header";
 import { SideBar } from "../components/SideBar";
-import { AuthContext } from "../contexts/AuthContext";
-import { withSSRAuth } from "../utils/withSSRAuth";
+import { useRouter } from "next/router";
+import { auth } from "../services/firebase";
+import { useAuth } from "../hooks/useAuth";
+import { getApp } from "firebase/app";
+import { onAuthStateChanged } from "firebase/auth";
 
 
 const Dashboard: NextPage = () => {
-  const { user } = useContext(AuthContext)
+  const { user, signOut, isLoading } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/')
+    }
+  }, [user, isLoading])
 
   return (
     <>
       <Head>
         <title>Dashboard</title>
       </Head>
-      
+
       <Flex direction="column" h="100vh">
         <Header />
 
@@ -27,7 +35,12 @@ const Dashboard: NextPage = () => {
           <SideBar />
 
           <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
-
+            <Button
+              type="button"
+              onClick={async () => await signOut()}
+            >
+              SignOut
+            </Button>
           </SimpleGrid>
         </Flex>
       </Flex>
@@ -35,10 +48,10 @@ const Dashboard: NextPage = () => {
   )
 }
 
-export const getServerSideProps = withSSRAuth(async (ctx) => {
+export const getServerSideProps = async (ctx) => {
   return {
     props: {}
   }
-})
+}
 
 export default Dashboard

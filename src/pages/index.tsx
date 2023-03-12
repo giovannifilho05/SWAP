@@ -1,15 +1,14 @@
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { Button, Flex, Stack } from "@chakra-ui/react";
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import { GetServerSideProps, NextPage } from "next";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { Input } from "../components/Form/Input";
-import { AuthContext } from "../contexts/AuthContext";
-import { withSSRGuest } from '../utils/withSSRGuest';
+import { AuthContext, SignInMethod } from "../contexts/AuthContext";
 
 type SignInFormData = {
     email: string;
@@ -22,20 +21,32 @@ const signInFormSchema = yup.object().shape({
 })
 
 const Home: NextPage = () => {
-    const { signIn } = useContext(AuthContext)
-    
+    const [signInMethod, setSignMethod] = useState<SignInMethod>('email')
+    const { user, signIn } = useContext(AuthContext)
+    const router = useRouter()
+
+
+    useEffect(() => {
+        if (user) {
+            router.push('/')
+        }
+    }, [user])
+
     const { register, handleSubmit, formState, formState: { errors } } = useForm({
         resolver: yupResolver(signInFormSchema),
     })
 
     const handleSignIn: SubmitHandler<SignInFormData> = async (data) => {
-        const { success } = await signIn(data)
+        console.log({ signInMethod })
+        const { success } = await signIn(signInMethod, data)
 
-        if(success) {
+        if (success) {
             Router.push('dashboard')
         } else {
             alert('You\'re not authorized')
         }
+
+
     }
 
     return (
@@ -81,6 +92,16 @@ const Home: NextPage = () => {
                 >
                     Entrar
                 </Button>
+                <Button
+                    type="submit"
+                    onClick={() => setSignMethod('google')}
+                    mt="6"
+                    size="lg"
+                    colorScheme="pink"
+                    isLoading={formState.isSubmitting}
+                >
+                    Google
+                </Button>
             </Flex>
         </Flex>
     )
@@ -88,10 +109,10 @@ const Home: NextPage = () => {
 
 export default Home
 
-export const getServerSideProps: GetServerSideProps = withSSRGuest(async (ctx) => {
-  return {
-    props: {
-      users: []
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+    return {
+        props: {
+            users: []
+        }
     }
-  }
-});
+};
