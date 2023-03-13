@@ -3,9 +3,10 @@ import { Button, Flex, Stack } from "@chakra-ui/react";
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
+import { FcGoogle } from 'react-icons/fc'
 
 import { GetServerSideProps, NextPage } from "next";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import { Input } from "../components/Form/Input";
 import { AuthContext, SignInMethod } from "../contexts/AuthContext";
@@ -16,8 +17,25 @@ type SignInFormData = {
 }
 
 const signInFormSchema = yup.object().shape({
-    email: yup.string().email("E-mail deve ser válido.").required("E-mail é obrigatório."),
-    password: yup.string().required('Senha é obrigatória.')
+    providerLogin: yup.boolean(),
+    email: yup
+        .string()
+        .email("E-mail deve ser válido.")
+        .when('providerLogin', {
+            is: (val: Boolean) => {
+                return val === false
+            },
+            then: (schema) => schema.required("E-mail é obrigatório.")
+
+        }),
+    password: yup
+        .string()
+        .when('providerLogin', {
+            is: (val: Boolean) => {
+                return val === false
+            },
+            then: (schema) => schema.required('Senha é obrigatória.')
+        })
 })
 
 const Home: NextPage = () => {
@@ -32,12 +50,12 @@ const Home: NextPage = () => {
         }
     }, [user])
 
-    const { register, handleSubmit, formState, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState, formState: { errors }, setValue } = useForm({
         resolver: yupResolver(signInFormSchema),
     })
 
     const handleSignIn: SubmitHandler<SignInFormData> = async (data) => {
-        console.log({ signInMethod })
+        console.log('1')
         const { success } = await signIn(signInMethod, data)
 
         if (success) {
@@ -85,6 +103,10 @@ const Home: NextPage = () => {
 
                 <Button
                     type="submit"
+                    onClick={() => {
+                        setValue('providerLogin', false)
+                        setSignMethod('email')
+                    }}
                     mt="6"
                     size="lg"
                     colorScheme="pink"
@@ -92,12 +114,20 @@ const Home: NextPage = () => {
                 >
                     Entrar
                 </Button>
+
+                <input checked={signInMethod !== 'email'} type="checkbox" name="providerLogin" {...register('providerLogin')} hidden />
+
                 <Button
                     type="submit"
-                    onClick={() => setSignMethod('google')}
+                    onClick={() => {
+                        setValue('providerLogin', true)
+                        setSignMethod('google')
+                    }}
+                    leftIcon={<FcGoogle />}
+                    variant='outline'
                     mt="6"
                     size="lg"
-                    colorScheme="pink"
+                    colorScheme="white"
                     isLoading={formState.isSubmitting}
                 >
                     Google
