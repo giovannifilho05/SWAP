@@ -1,5 +1,5 @@
-import Router, { useRouter } from 'next/router'
-import { Button, Flex, Stack } from "@chakra-ui/react";
+import { useRouter } from 'next/router'
+import { Button, Flex, Stack, Link as ChakraLink, useToast, VStack, Text } from "@chakra-ui/react";
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -10,6 +10,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import { Input } from "../components/Form/Input";
 import { AuthContext, SignInMethod } from "../contexts/AuthContext";
+import Link from 'next/link';
+import { Logo } from '../components/Header/Logo';
 
 type SignInFormData = {
     email: string;
@@ -42,6 +44,7 @@ const Home: NextPage = () => {
     const [signInMethod, setSignMethod] = useState<SignInMethod>('email')
     const { user, signIn } = useContext(AuthContext)
     const router = useRouter()
+    const toast = useToast()
 
 
     useEffect(() => {
@@ -55,25 +58,34 @@ const Home: NextPage = () => {
     })
 
     const handleSignIn: SubmitHandler<SignInFormData> = async (data) => {
-        console.log('1')
-        const { success } = await signIn(signInMethod, data)
+        const { success, message } = await signIn(signInMethod, data)
 
         if (success) {
-            Router.push('dashboard')
+            setTimeout(() => {
+                router.push('/dashboard')
+            }, 400);
+
         } else {
-            alert('You\'re not authorized')
+            toast({
+                title: 'Unauthorized.',
+                description: message,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            })
         }
 
 
     }
 
     return (
-        <Flex
+        <VStack
             w="100vw"
             h="100vh"
             align="center"
             justify="center"
         >
+            <Logo fontSize={["6xl", "7xl"]}/>
             <Flex
                 as="form"
                 w="100%"
@@ -88,7 +100,7 @@ const Home: NextPage = () => {
                     <Input
                         name="email"
                         type="email"
-                        label="Email"
+                        label="E-mail"
                         error={errors.email as FieldError}
                         {...register('email')}
                     />
@@ -110,7 +122,7 @@ const Home: NextPage = () => {
                     mt="6"
                     size="lg"
                     colorScheme="pink"
-                    isLoading={formState.isSubmitting}
+                    isLoading={formState.isSubmitting && signInMethod === 'email'}
                 >
                     Entrar
                 </Button>
@@ -128,12 +140,21 @@ const Home: NextPage = () => {
                     mt="6"
                     size="lg"
                     colorScheme="white"
-                    isLoading={formState.isSubmitting}
+                    isLoading={formState.isSubmitting && signInMethod === 'google'}
                 >
                     Google
                 </Button>
             </Flex>
-        </Flex>
+            <Text> Não possui conta ?
+                <Link href="/signUp" passHref>
+                    <ChakraLink color='pink.500' ml='2'>
+                        Crie uma conta.
+                    </ChakraLink>
+                </Link>
+
+            </Text>
+
+        </VStack>
     )
 }
 

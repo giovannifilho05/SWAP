@@ -36,7 +36,7 @@ export function Header() {
         />
       )}
 
-      <Logo />
+      <Logo w="64"/>
 
       {isWideVersion && (
         <SearchBox />

@@ -12,6 +12,7 @@ export function Profile({ showProfileData = true }: ProfileProps) {
 
   return (
     <Flex align="center">
+      
       {showProfileData && (
         <Box mr="4" textAlign="right">
           <Text >{user?.displayName}</Text>
@@ -19,7 +20,7 @@ export function Profile({ showProfileData = true }: ProfileProps) {
         </Box>
       )}
 
-      <Avatar size="md" name={user?.displayName} src={user?.displayName} />
+      <Avatar size="md" name={user?.displayName} src={user?.photoURL} />
     </Flex>
   )
 }

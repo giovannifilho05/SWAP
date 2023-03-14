@@ -1,5 +1,5 @@
 import { createContext, ReactNode } from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 
 import { auth } from "../services/firebase";
 import { signOut as signOutAuth, User as FirebaseUser } from 'firebase/auth'
@@ -51,36 +51,59 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function signInWithGoogleProvider() {
-    try {
-      const provider = new GoogleAuthProvider();
-      const user = await signInWithPopup(auth, provider);
-
-      return !!user
-    } catch (error) {
-      console.log('Error Google Auth Provider', error)
-      return false
-    }
-  }
-
   async function signIn(signInMethod: SignInMethod, credentials: SignInCredentials) {
-    // const { email, password } = credentials ?? {}
-
     switch (signInMethod) {
+      case 'email':
+        const { email, password } = credentials ?? {}
+        return await signInWithEmail(email, password)
+
       case 'google':
-        const success = await signInWithGoogleProvider()
-        return {
-          success,
-        }
+        return await signInWithGoogleProvider()
 
       default:
+
         return {
           success: false,
           message: 'Sign in method not found'
         }
     }
   }
-  
+
+  async function signInWithGoogleProvider() {
+    try {
+      const provider = new GoogleAuthProvider();
+      const user = await signInWithPopup(auth, provider);
+
+      return {
+        success: !!user,
+      }
+    } catch (error) {
+      console.log('Error Google Auth Provider', error)
+      return {
+        success: false,
+        message: error.code
+      }
+    }
+  }
+
+  async function signInWithEmail(email: string, password: string) {
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password)
+      
+
+      return {
+        success: true,
+      }
+    } catch (error) {
+      console.log(error)
+      return {
+        success: false,
+        message: error.code
+      }
+    }
+  }
+
+
   return (
     <AuthContext.Provider value={{
       user,
