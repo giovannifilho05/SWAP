@@ -1,7 +1,8 @@
 import { User } from 'firebase/auth';
 import { useState, useEffect } from 'react'
-import { auth } from '../services/firebase';
+import nookies, { destroyCookie } from 'nookies'
 
+import { auth } from '../services/firebase';
 // const formatAuthUser = (user) => ({
 //     uid: user.uid,
 //     email: user.email
@@ -14,14 +15,19 @@ export default function useFirebaseAuth() {
     const authStateChanged = async (authState: User) => {
         if (!authState) {
             setAuthUser(null)
+            destroyCookie(undefined, process.env.NEXT_PUBLIC_TOKEN_NAME)
             setIsLoading(false)
             return;
         }
 
         setIsLoading(true)
-        // const formattedUser = formatAuthUser(authState);
-        setAuthUser(authState);
-        setIsLoading(false);
+        const token = await authState.getIdToken();
+        console.log(authState)
+        nookies.set(undefined, process.env.NEXT_PUBLIC_TOKEN_NAME, token, { path: '/' })
+        // const formattedUser = formatAuthUser(authState)
+        setAuthUser(authState)
+
+        setIsLoading(false)
     };
 
     // listen for Firebase state change

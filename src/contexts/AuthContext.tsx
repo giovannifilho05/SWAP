@@ -4,6 +4,7 @@ import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from 
 import { auth } from "../services/firebase";
 import { signOut as signOutAuth, User as FirebaseUser } from 'firebase/auth'
 import useFirebaseAuth from "../hooks/useFirebaseAuth";
+import { useRouter } from "next/router";
 
 interface User extends FirebaseUser {
   // permissions: string;
@@ -41,32 +42,37 @@ export const AuthContext = createContext({} as AuthContextData)
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { isLoading, authUser: user } = useFirebaseAuth();
+  const router = useRouter()
 
   async function signOut() {
     try {
-      console.log('SignOuting')
       await signOutAuth(auth)
+      router.push('/signIn')
     } catch (error) {
       console.log('Error on signOut', error)
     }
   }
 
   async function signIn(signInMethod: SignInMethod, credentials: SignInCredentials) {
+    let result: SignInResponse
     switch (signInMethod) {
       case 'email':
         const { email, password } = credentials ?? {}
-        return await signInWithEmail(email, password)
+        result = await signInWithEmail(email, password)
+        break;
 
       case 'google':
-        return await signInWithGoogleProvider()
-
+        result = await signInWithGoogleProvider()
+        break;
+        
       default:
-
         return {
           success: false,
           message: 'Sign in method not found'
         }
     }
+
+    return result
   }
 
   async function signInWithGoogleProvider() {
@@ -90,7 +96,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password)
       
-
       return {
         success: true,
       }
