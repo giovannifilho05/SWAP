@@ -22,7 +22,6 @@ export default function useFirebaseAuth() {
 
         setIsLoading(true)
         const token = await authState.getIdToken();
-        console.log(authState)
         nookies.set(undefined, process.env.NEXT_PUBLIC_TOKEN_NAME, token, { path: '/' })
         // const formattedUser = formatAuthUser(authState)
         setAuthUser(authState)

@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { Logo } from '../components/Header/Logo';
 import { useAuth } from "../hooks/useAuth";
 import { withSSRGuest } from "../utils/withSSRGuest";
+import Head from "next/head";
 
 type SignInFormData = {
     email: string;
@@ -74,88 +75,94 @@ const SignIn: NextPage = () => {
     }
 
     return (
-        <VStack
-            w="100vw"
-            h="100vh"
-            align="center"
-            justify="center"
-        >
-            <Logo fontSize={["6xl", "7xl"]} />
-            <Flex
-                as="form"
-                w="100%"
-                maxWidth={360}
-                bg="gray.800"
-                p="8"
-                borderRadius={8}
-                flexDir="column"
-                onSubmit={handleSubmit(handleSignIn)}
+        <>
+            <Head>
+                <title>Entrar</title>
+            </Head>
+
+            <VStack
+                w="100vw"
+                h="100vh"
+                align="center"
+                justify="center"
             >
-                <Stack spacing="4">
-                    <Input
-                        name="email"
-                        type="email"
-                        label="E-mail"
-                        error={errors.email as FieldError}
-                        {...register('email')}
-                    />
-                    <Input
-                        name="password"
-                        type="password"
-                        label="Senha"
-                        error={errors.password as FieldError}
-                        {...register('password')}
-                    />
-                </Stack>
-
-                <Button
-                    type="submit"
-                    onClick={() => {
-                        setValue('providerLogin', false)
-                        setSignMethod('email')
-                    }}
-                    mt="6"
-                    size="lg"
-                    colorScheme="pink"
-                    isLoading={isSubmitting && signInMethod === 'email'}
+                <Logo fontSize={["6xl", "7xl"]} />
+                <Flex
+                    as="form"
+                    w="100%"
+                    maxWidth={360}
+                    bg="gray.800"
+                    p="8"
+                    borderRadius={8}
+                    flexDir="column"
+                    onSubmit={handleSubmit(handleSignIn)}
                 >
-                    Entrar
-                </Button>
+                    <Stack spacing="4">
+                        <Input
+                            name="email"
+                            type="email"
+                            label="E-mail"
+                            error={errors.email as FieldError}
+                            {...register('email')}
+                        />
+                        <Input
+                            name="password"
+                            type="password"
+                            label="Senha"
+                            error={errors.password as FieldError}
+                            {...register('password')}
+                        />
+                    </Stack>
 
-                <input
-                    checked={signInMethod !== 'email'}
-                    type="checkbox"
-                    name="providerLogin"
-                    hidden
-                    {...register('providerLogin')}
-                />
+                    <Button
+                        type="submit"
+                        onClick={() => {
+                            setValue('providerLogin', false)
+                            setSignMethod('email')
+                        }}
+                        mt="6"
+                        size="lg"
+                        colorScheme="pink"
+                        isLoading={isSubmitting && signInMethod === 'email'}
+                    >
+                        Entrar
+                    </Button>
 
-                <Button
-                    type="submit"
-                    onClick={() => {
-                        setValue('providerLogin', true)
-                        setSignMethod('google')
-                    }}
-                    leftIcon={<FcGoogle />}
-                    variant='outline'
-                    mt="6"
-                    size="lg"
-                    colorScheme="white"
-                    isLoading={isSubmitting && signInMethod === 'google'}
-                >
-                    Google
-                </Button>
-            </Flex>
-            <Text> Não possui conta ?
-                <Link href="/signUp" passHref>
-                    <ChakraLink color='pink.500' ml='2'>
-                        Crie uma conta.
-                    </ChakraLink>
-                </Link>
+                    <input
+                        checked={signInMethod !== 'email'}
+                        type="checkbox"
+                        name="providerLogin"
+                        hidden
+                        {...register('providerLogin')}
+                    />
 
-            </Text>
+                    <Button
+                        type="submit"
+                        onClick={() => {
+                            setValue('providerLogin', true)
+                            setSignMethod('google')
+                        }}
+                        leftIcon={<FcGoogle />}
+                        variant='outline'
+                        mt="6"
+                        size="lg"
+                        colorScheme="white"
+                        isLoading={isSubmitting && signInMethod === 'google'}
+                    >
+                        Google
+                    </Button>
+                </Flex>
+                <Text> Não possui conta ?
+                    <Link href="/signUp" passHref>
+                        <ChakraLink color='pink.500' ml='2'>
+                            Crie uma conta.
+                        </ChakraLink>
+                    </Link>
 
-        </VStack>
+                </Text>
+
+            </VStack>
+        </>
     )
 }
 
