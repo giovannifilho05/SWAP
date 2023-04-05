@@ -35,9 +35,7 @@ export function SettingsMenu() {
             </MenuButton>
             <MenuList  >
 
-                <MenuItem
-                    icon={<AddIcon fontSize="md" />}
-                >
+                <MenuItem icon={<AddIcon fontSize="md" />}>
                     Criar novo projeto
                 </MenuItem>
 

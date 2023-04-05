@@ -25,7 +25,7 @@ const FourOhFour: NextPage = () => {
                     height="400px"
                 /> */}
                 <Link href="/" passHref >
-                    <Button as="a" colorScheme='pink' size='lg' leftIcon={<IoIosHome />}>
+                    <Button as="a" colorScheme='teal' size='lg' leftIcon={<IoIosHome />}>
                         Voltar
                     </Button>
                 </Link>

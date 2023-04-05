@@ -3,7 +3,7 @@ import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { firebaseAdmin } from "../../services/firebase-admin";
 
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const auth = await firebaseAdmin.auth().updateUser('F39JyGexjfdpcT3MqJ5HBjj5GMm1', {
       email: 'admin@admin.com',
       phoneNumber: '+11234567890',
@@ -22,5 +22,7 @@ export default async function handler(req, res) {
     //     // doc.data() will be undefined in this case
     //     console.log("No such document!");
     // }
+
+
     res.status(200).json({ data: auth })
 }

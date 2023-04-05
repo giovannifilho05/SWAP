@@ -7,59 +7,85 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup'
 import { FcGoogle } from 'react-icons/fc'
 
-import { Input } from "../components/Form/Input";
-import { Logo } from '../components/Header/Logo';
-import { useAuth } from "../hooks/useAuth";
-import { withSSRGuest } from "../utils/withSSRGuest";
+import { Input } from "../../components/Form/Input";
+import { Logo } from '../../components/Header/Logo';
+import { useAuth } from "../../hooks/useAuth";
+import { withSSRGuest } from "../../utils/withSSRGuest";
 import Head from "next/head";
 import { useState } from "react";
+import { api } from "../../services/api";
+import { CreateUserResponse } from "../api/user/create";
+import { SignUpForm } from "../../components/Form/SignUpForm";
 
-type SignInFormData = {
+type SignUpFormData = {
     email: string;
     password: string;
+    passwordCheck: string;
 }
 
-const signInFormSchema = yup.object().shape({
+const signUpFormSchema = yup.object().shape({
     email: yup
         .string()
         .email("E-mail deve ser válido.")
         .required("E-mail é obrigatório."),
     password: yup
         .string()
-        .required('Senha é obrigatória.')
+        .required('Senha é obrigatória.'),
+    passwordCheck: yup
+        .string()
+        .oneOf([yup.ref('password'), null], 'A confirmação deve ser igual a senha.')
+        .required('A confirmação da senha é obrigatória.'),
 })
 
-const SignIn: NextPage = () => {
-    const { signInWithEmail, signInWithGoogle, authState, isLoading } = useAuth()
+const SignUp: NextPage = () => {
+    const { signInWithEmail, signInWithGoogle } = useAuth()
     const [isThirdPartyProvider, setIsThirdPartyProvider] = useState<boolean>()
-
+    const router = useRouter()
     const toast = useToast()
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
-        resolver: yupResolver(signInFormSchema),
+        resolver: yupResolver(signUpFormSchema),
     })
 
-    const handleSignIn: SubmitHandler<SignInFormData> = async (data) => {
-        const { success, message } = await signInWithEmail(data)
+    const handleSignIn: SubmitHandler<SignUpFormData> = async (formData) => {
+        try {
+            const { data } = await api.post<CreateUserResponse>('user/create', {
+                user: formData
+            })
 
-        if (!success) showToast({ message })
+            console.log('Usuário criado.')
+            // signInWithEmail(formData)
+
+        } catch (error) {
+            console.log('Erro ao tentar criar usuário.')
+            console.log(error)
+        }
     }
 
-    function showToast({ message }) {
-        toast({
-            title: 'Não Autorizado.',
-            description: message,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-        })
-    }
-
+    // function showToast(success: boolean, message?: string) {
+    //     if (success) {
+    //         toast({
+    //             title: 'Welcome back.',
+    //             status: 'success',
+    //             duration: 1500,
+    //             isClosable: true,
+    //         })
+    //         router.push('/dashboard')
+    //     } else {
+    //         toast({
+    //             title: 'Unauthorized.',
+    //             description: message,
+    //             status: 'error',
+    //             duration: 9000,
+    //             isClosable: true,
+    //         })
+    //     }
+    // }
 
     return (
         <>
             <Head>
-                <title>Entrar</title>
+                <title>Complete seu perfil</title>
             </Head>
 
             <VStack
@@ -76,35 +102,32 @@ const SignIn: NextPage = () => {
                     gap={4}
                 >
 
-                    <VStack
+                    {/* <VStack
                         flex={1}
-                    // bgColor="blue"
                     >
                         <Logo fontSize={["6xl", "7xl"]} />
-                    </VStack>
+                    </VStack> */}
 
                     <VStack
                         flex={1}
-                        px="8"
                     >
-
-                        <Box alignSelf="start" mb="4">
+                        {/* <Box alignSelf="start" mb="4">
                             <Heading
                                 as="h1"
                                 fontSize="4xl"
                                 fontWeight={300}
                             >
-                                Acesse sua conta
+                                Crie sua conta
                             </Heading>
                             <Heading
                                 as="h2"
-                                fontSize="md"
+                                fontSize="sm"
                                 fontWeight={100}
-                            >Já possui uma conta? Faça login e aproveite 😉
+                            >Ainda não possui uma conta? Crie uma agora mesmo
                             </Heading>
-                        </Box>
+                        </Box> */}
 
-                        <Flex
+                        {/* <Flex
                             as="form"
                             w="100%"
                             flexDir="column"
@@ -125,6 +148,13 @@ const SignIn: NextPage = () => {
                                     error={errors.password as FieldError}
                                     {...register('password')}
                                 />
+                                <Input
+                                    name="password-check"
+                                    type="password"
+                                    label="Confirme sua senha"
+                                    error={errors.passwordCheck as FieldError}
+                                    {...register('passwordCheck')}
+                                />
                             </Stack>
 
                             <Button
@@ -134,11 +164,13 @@ const SignIn: NextPage = () => {
                                 colorScheme="teal"
                                 isLoading={isSubmitting}
                             >
-                                Entrar
+                                Criar
                             </Button>
-                        </Flex>
+                        </Flex> */}
 
-                        <Text size="xs">ou acesso com</Text>
+                        <SignUpForm />
+
+                        {/* <Text size="xs">ou acesso com</Text>
 
                         <Button
                             type="submit"
@@ -146,12 +178,9 @@ const SignIn: NextPage = () => {
                                 setIsThirdPartyProvider(true)
                                 const { success, message } = await signInWithGoogle()
 
-                                if (!success) {
-                                    setIsThirdPartyProvider(false)
-                                    showToast({ message })
+                                if (!success) setIsThirdPartyProvider(false)
 
-                                }
-
+                                showToast(success, message)
                             }}
                             leftIcon={<FcGoogle />}
                             variant='outline'
@@ -162,16 +191,16 @@ const SignIn: NextPage = () => {
                             isLoading={isThirdPartyProvider}
                         >
                             Google
-                        </Button>
+                        </Button> */}
 
-                        <Text color="gray.700"> Não possui conta?
-                            <Link href="/signUp" passHref>
+                        {/* <Text color="gray.700"> Já possui uma conta?
+                            <Link href="/signIn" passHref>
                                 <ChakraLink color='teal.500' fontWeight="500" ml='2'>
-                                    Crie uma conta.
+                                    Entre.
                                 </ChakraLink>
                             </Link>
 
-                        </Text>
+                        </Text> */}
                     </VStack>
 
                 </HStack>
@@ -181,10 +210,10 @@ const SignIn: NextPage = () => {
     )
 }
 
-export const getServerSideProps = withSSRGuest(async (ctx) => {
-    return {
-        props: {}
-    }
-})
+// export const getServerSideProps = withSSRGuest(async (ctx) => {
+//     return {
+//         props: {}
+//     }
+// })
 
-export default SignIn
+export default SignUp
