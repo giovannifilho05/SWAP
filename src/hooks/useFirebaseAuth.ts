@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import nookies, { destroyCookie } from 'nookies'
-import { User } from 'firebase/auth';
+import { User, updateProfile } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -11,7 +11,6 @@ export type AuthState = 'unauthenticated' | 'authenticated' | 'missingInfo'
 
 
 async function isProfileComplete(userID: string) {
-    console.log({ userID })
     const docRef = doc(db, "user", userID);
     const docSnap = await getDoc(docRef);
 
@@ -26,40 +25,32 @@ async function isProfileComplete(userID: string) {
 }
 
 export default function useFirebaseAuth() {
-    const router = useRouter()
-    const toast = useToast()
-    
     const [authUser, setAuthUser] = useState<User>(null);
     const [isLoading, setIsLoading] = useState(true);
-    let authState = 'unauthenticated' as AuthState
-    
-    const authStateChanged = async (user: User) => {
-        setIsLoading(true)
+    const [authState, setAuthState] = useState<AuthState>('unauthenticated');
 
+    const authStateChanged = async (user: User) => {
+        setIsLoading(() => true)
+        
         if (!user) {
+            setAuthState('unauthenticated')
             setAuthUser(null)
             destroyCookie(undefined, process.env.NEXT_PUBLIC_TOKEN_NAME)
-            setIsLoading(false)
-            
-            redirect(false)
-            return;
-        }
-
-        const token = await user.getIdToken();
-        nookies.set(undefined, process.env.NEXT_PUBLIC_TOKEN_NAME, token, { path: '/' })
-
-        setAuthUser(user)
-
-
-        if (await isProfileComplete(user.uid)) {
-            authState = 'authenticated'
         } else {
-            authState = 'missingInfo'
+            const token = await user.getIdToken();
+            nookies.set(undefined, process.env.NEXT_PUBLIC_TOKEN_NAME, token, { path: '/' })
+            
+            setAuthUser(user)
+            
+            
+            if (await isProfileComplete(user.uid)) {
+                setAuthState('authenticated')
+            } else {
+                setAuthState('missingInfo')
+            }
         }
-
-        setIsLoading(false)
-
-        redirect(true)
+        
+        setIsLoading(() => false)
     };
 
     // listen for Firebase state change
@@ -67,29 +58,6 @@ export default function useFirebaseAuth() {
         const unsubscribe = auth.onAuthStateChanged(authStateChanged);
         return () => unsubscribe();
     }, []);
-
-
-    function redirect(success: boolean) {
-        console.log({ authState, isLoading, success });
-
-        if (success && authState === 'authenticated') {
-            toast({
-                title: 'Bem-vindo(a) de volta.',
-                status: 'success',
-                duration: 1500,
-                isClosable: true,
-            })
-            router.push('/dashboard')
-        } else if (success && authState === 'missingInfo') {
-            toast({
-                title: 'Informações pendentes',
-                status: 'warning',
-                duration: 3000,
-                isClosable: true,
-            })
-            router.push('/signUp/completeProfile')
-        }
-    }
 
     return {
         authUser,

@@ -12,8 +12,6 @@ export function OptionsNav() {
       borderRightWidth={1}
       borderColor="teal.700"
     >
-
-
       <Link href="/newProject">
         <IconButton
           aria-label='Adicionar novo projeto'

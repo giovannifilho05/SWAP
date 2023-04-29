@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import Link from 'next/link';
-import { useRouter } from 'next/router'
 import { Button, Flex, Stack, Link as ChakraLink, useToast, VStack, Text, HStack, Heading, Box } from "@chakra-ui/react";
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -10,9 +9,9 @@ import { FcGoogle } from 'react-icons/fc'
 import { Input } from "../components/Form/Input";
 import { Logo } from '../components/Header/Logo';
 import { useAuth } from "../hooks/useAuth";
-import { withSSRGuest } from "../utils/withSSRGuest";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 type SignInFormData = {
     email: string;
@@ -30,29 +29,49 @@ const signInFormSchema = yup.object().shape({
 })
 
 const SignIn: NextPage = () => {
-    const { signInWithEmail, signInWithGoogle, authState, isLoading } = useAuth()
+    const router = useRouter()
+    const toast = useToast()
+    const { signInWithEmail, signInWithGoogle, isNotAuthenticated, isLoading } = useAuth()
     const [isThirdPartyProvider, setIsThirdPartyProvider] = useState<boolean>()
 
-    const toast = useToast()
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
         resolver: yupResolver(signInFormSchema),
     })
 
+    useEffect(() => {
+        const { success, redirect } = isNotAuthenticated()
+
+        console.log({success, redirect})
+        if (!isLoading) {
+            if (!success) router.replace(redirect.path)
+        }
+    }, [isLoading]);
+
     const handleSignIn: SubmitHandler<SignInFormData> = async (data) => {
         const { success, message } = await signInWithEmail(data)
 
-        if (!success) showToast({ message })
+        showToast({ success, message })
     }
 
-    function showToast({ message }) {
-        toast({
-            title: 'Não Autorizado.',
-            description: message,
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-        })
+    function showToast({ success, message }) {
+        if (success) {
+            toast({
+                title: 'Logado.',
+                status: 'success',
+                duration: 1500,
+                isClosable: true,
+            })
+        } else {
+            toast({
+                title: 'Não Autorizado.',
+                description: message,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+
     }
 
 
@@ -148,7 +167,7 @@ const SignIn: NextPage = () => {
 
                                 if (!success) {
                                     setIsThirdPartyProvider(false)
-                                    showToast({ message })
+                                    showToast({ success, message })
 
                                 }
 
@@ -180,11 +199,5 @@ const SignIn: NextPage = () => {
         </>
     )
 }
-
-export const getServerSideProps = withSSRGuest(async (ctx) => {
-    return {
-        props: {}
-    }
-})
 
 export default SignIn
