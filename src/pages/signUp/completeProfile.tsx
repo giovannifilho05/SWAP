@@ -39,6 +39,7 @@ const SignUp: NextPage = () => {
                     ...userData,
                     cpf: onlyNumbers(userData.cpf),
                     phone: onlyNumbers(userData.phone),
+                    email: user.email
                 }),
                 await updateProfile({
                     displayName: `${userData.name} ${userData.lastName}`,

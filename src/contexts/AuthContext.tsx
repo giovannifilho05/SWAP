@@ -10,7 +10,6 @@ import {
 } from 'firebase/auth';
 
 import { auth, db } from "../services/firebase";
-// import useFirebaseAuth, { AuthState } from "../hooks/useFirebaseAuth";
 import { api } from "../services/api";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -65,17 +64,15 @@ type AuthProviderProps = {
 
 export const AuthContext = createContext({} as AuthContextData)
 
+export enum Roles {
+    Admin = 'Administrador',
+    Student= 'Discente',
+    Teacher= 'Docente',
+}
 
 async function isProfileComplete(userID: string) {
     const docRef = doc(db, "user", userID);
     const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-        console.log('Profile is complete', { userData: docSnap.data() })
-
-    } else {
-        console.log("No such document!");
-    }
 
     return docSnap.exists();
 }

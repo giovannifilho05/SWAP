@@ -1,8 +1,18 @@
-import { forwardRef, ReactElement, Ref, useImperativeHandle } from "react"
-import { useDisclosure, Button, Modal as ModalChakra, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react"
-import { Input } from "../Form/Input";
-import { useTheme } from "@emotion/react";
-import { Form } from "./Form";
+import { forwardRef, ReactElement, Ref, useImperativeHandle, useRef } from "react"
+import {
+    useDisclosure,
+    Button,
+    Modal as ModalChakra,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+    useToast
+} from "@chakra-ui/react"
+
+import { FormRefProps, UserCardForm } from "./userCardForm";
 
 interface ModalProps {
     children: ReactElement;
@@ -12,17 +22,10 @@ interface RefProps {
     onOpen: () => void;
 }
 
-interface Theme {
-    colors: {
-        pink: {
-            400: string; 
-        }
-    }
-}
-
 function ModalComponent({ children }: ModalProps, ref: Ref<RefProps>) {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const theme: Theme = useTheme() as Theme
+    const formRef = useRef<FormRefProps>(null)
+    const toast = useToast()
 
     useImperativeHandle(ref, () => ({
         onOpen
@@ -34,16 +37,52 @@ function ModalComponent({ children }: ModalProps, ref: Ref<RefProps>) {
 
             <ModalChakra isOpen={isOpen} onClose={onClose} >
                 <ModalOverlay />
-                <ModalContent bgColor="gray.600">
-                    <ModalHeader color='white' >Editando Permissão de Usuário</ModalHeader>
+                <ModalContent bgColor="white" border="1px solid" borderColor="teal">
+                    <ModalHeader color='gray.500' >
+                        Editando Permissão de Usuário
+                    </ModalHeader>
+
                     <ModalBody>
+                        <UserCardForm ref={formRef}/>
                     </ModalBody>
-                        <Form />
+
                     <ModalFooter>
-                        <Button colorScheme='pink' mr={3} onClick={onClose}>
+                        <Button colorScheme='teal'
+                            mr={3}
+                            onClick={async () => {
+                                try {
+                                    await formRef.current?.onSave()
+
+                                    toast({
+                                        title: 'Usuário alterado.',
+                                        status: 'success',
+                                        duration: 1500,
+                                        isClosable: true,
+                                    })
+                                    
+                                    onClose();
+                                } catch(err) {
+                                    console.log(err)
+
+                                    
+                                    toast({
+                                        title: 'Ocorreu um erro.',
+                                        status: 'error',
+                                        duration: 1500,
+                                        isClosable: true,
+                                    })
+                                }
+                            }}
+                        >
                             Salvar
                         </Button>
-                        <Button variant='outline' _hover={{ bgColor: `${theme.colors?.pink[400]}30`, }} colorScheme='pink'>Cancelar</Button>
+                        <Button
+                            variant='outline'
+                            colorScheme='teal'
+                            onClick={onClose}
+                        >
+                            Cancelar
+                        </Button>
                     </ModalFooter>
                 </ModalContent>
             </ModalChakra>

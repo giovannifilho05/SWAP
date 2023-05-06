@@ -6,6 +6,7 @@ import InputMask from "react-input-mask";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { isCPFValid, onlyNumbers } from "../../utils/usefulMethods";
+import { Roles } from "../../contexts/AuthContext";
 
 interface SignUpFormProps {
     onSubmit: SubmitHandler<PersonalData>;
@@ -31,6 +32,7 @@ const signUpFormSchema = yup.object().shape({
         .required("Sobrenome é obrigatório."),
     cpf: yup
         .string()
+        .required("CPF é obrigatório.")
         .test(
             'CPF válido',
             'CPF inválido',
@@ -46,7 +48,11 @@ const signUpFormSchema = yup.object().shape({
                 const numbers = onlyNumbers(value)
                 return numbers.length === 11 // 11 dígitos
             },
-        )
+        ),
+    userType: yup
+        .string()
+        .oneOf(Object.keys(Roles))
+        .required("O Tipo do Usuário é obrigatório.")
 })
 
 export function SignUpForm({ defaultValues, onSubmit }: SignUpFormProps) {
@@ -119,14 +125,14 @@ export function SignUpForm({ defaultValues, onSubmit }: SignUpFormProps) {
                     <Select
                         name="userType"
                         placeholder='Selecione um tipo'
-                        label="Tipo"
+                        label="Tipo do Usuário"
                         error={errors.userType as FieldError}
 
                         {...register('userType')}
                     >
-                        <option value='0'>Admin</option>
-                        <option value='1'>Discente</option>
-                        <option value='2'>Docente</option>
+                        {Object.keys(Roles).map(role => (
+                            <option value={role} key={Roles[role]}>{Roles[role]}</option>
+                        ))}
                     </Select>
                 </VStack>
             </VStack>

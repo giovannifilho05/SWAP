@@ -1,38 +1,39 @@
-import { Button, Text, HStack, Avatar, Box, Select, Spacer, Tag } from "@chakra-ui/react"
+import { Button, Text, HStack, Avatar, Box, Spacer, Tag } from "@chakra-ui/react"
 import { useRef } from "react"
 import { Modal } from './modal'
+import { User } from "../../contexts/UsersContext"
+import { useUsers } from "../../hooks/useUsers"
+import { Roles } from "../../contexts/AuthContext"
 
+interface UserCardProps {
+    user: User,
+}
 
-export function UserCard() {
+export function UserCard({ user }: UserCardProps) {
     const modalRef = useRef(null)
+    const { setSelectedUser} = useUsers()
 
     return (
         <Modal ref={modalRef}>
             <HStack
                 as={Button}
-                onClick={() => modalRef.current?.onOpen()}
+                onClick={() => {
+                    setSelectedUser(user.id)
+                    modalRef.current?.onOpen()
+                }}
                 h="80px"
-                bg="transparent"
-                _hover={{ bg: "gray.600" }}
             >
-                <Avatar name="Giovanni FIlho" />
+                <Avatar name={`${user.name} ${user.lastName}`} />
 
                 <Box mr="4" textAlign="left">
-                    <Text fontSize="md">Giovanni Filho</Text>
-                    <Text fontSize="sm" color="gray.300">email@email.com</Text>
+                    <Text fontSize="md">{`${user.name} ${user.lastName}`}</Text>
+                    <Text fontSize="sm" fontWeight="normal" color="gray.400">{user.email}</Text>
                 </Box>
                 <Spacer />
 
-                <Tag size="md" variant='solid' colorScheme='pink'>
-                    Administrador
+                <Tag size="md" variant='solid' colorScheme='teal'>
+                   {Roles[user.userType]}
                 </Tag>
-                {/* <Box>
-                    <Select placeholder='Select option' color="gray.900" bg="">
-                        <option value='option1' selected>Administrador</option>
-                        <option value='option2'>Professor</option>
-                        <option value='option3'>Aluno</option>
-                    </Select>
-                </Box> */}
             </HStack>
         </Modal>
     )
