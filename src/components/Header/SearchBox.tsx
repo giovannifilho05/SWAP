@@ -1,6 +1,6 @@
-import { Flex, Input, Icon } from "@chakra-ui/react";
-import { useTheme } from "@emotion/react";
-import { RiSearchLine } from "react-icons/ri";
+import { Flex, Input, Icon } from '@chakra-ui/react'
+import { useTheme } from '@emotion/react'
+import { RiSearchLine } from 'react-icons/ri'
 
 export function SearchBox() {
   const theme = useTheme()
@@ -30,7 +30,7 @@ export function SearchBox() {
         placeholder="Buscar na plataforma"
         _placeholder={{ color: 'teal.700' }}
       />
-      <Icon as={RiSearchLine} fontSize="20" color="teal.700"/>
+      <Icon as={RiSearchLine} fontSize="20" color="teal.700" />
     </Flex>
   )
 }

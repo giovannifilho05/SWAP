@@ -1,12 +1,12 @@
-import { NextPage } from "next";
-import Head from "next/head";
+import { NextPage } from 'next'
+import Head from 'next/head'
 
-import { Flex, Heading } from "@chakra-ui/react";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { Flex, Heading } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 const Home: NextPage = () => {
-  const router = useRouter();
+  const router = useRouter()
 
   useEffect(() => {
     router.push('/signIn')
@@ -24,6 +24,5 @@ const Home: NextPage = () => {
     </>
   )
 }
-
 
 export default Home

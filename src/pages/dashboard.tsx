@@ -1,15 +1,15 @@
-import { NextPage } from "next";
-import Head from "next/head";
+import { NextPage } from 'next'
+import Head from 'next/head'
 
-import { Center, Flex, SimpleGrid, Spinner } from "@chakra-ui/react";
-import { Header } from "../components/Header";
-import { SideBar } from "../components/SideBar";
-import { useAuth } from "../hooks/useAuth";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { Center, Flex, SimpleGrid, Spinner } from '@chakra-ui/react'
+import { Header } from '../components/Header'
+import { SideBar } from '../components/SideBar'
+import { useAuth } from '../hooks/useAuth'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 const Dashboard: NextPage = () => {
-  const { user, isLoading, isAuthenticated, authState } = useAuth()
+  const { user, isLoading, isAuthenticated } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const Dashboard: NextPage = () => {
     if (!isLoading) {
       if (!success) router.replace(redirect.path)
     }
-  }, [isLoading, user]);
+  }, [isLoading, user])
 
   return (
     <>
@@ -32,17 +32,18 @@ const Dashboard: NextPage = () => {
         <Flex w="100%" my="6" maxWidth={1480} mx="auto" px="6">
           <SideBar />
 
-          {isLoading
-            ? (
-              <Center w="100%" h="100%">
-                <Spinner size='xl' color="teal.500" />
-              </Center>
-            ): (
-              <SimpleGrid flex="1" gap="4" minChildWidth="320px" alignItems="flex-start">
-              </SimpleGrid>
+          {isLoading ? (
+            <Center w="100%" h="100%">
+              <Spinner size="xl" color="teal.500" />
+            </Center>
+          ) : (
+            <SimpleGrid
+              flex="1"
+              gap="4"
+              minChildWidth="320px"
+              alignItems="flex-start"
+            ></SimpleGrid>
           )}
-
-
         </Flex>
       </Flex>
     </>

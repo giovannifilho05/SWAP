@@ -17,7 +17,7 @@ export const theme = extendTheme({
       //   75: '#EDF2F7',
       50: '#F6FAFF',
       //   25: '#EEEEF2',
-    }
+    },
   },
   fonts: {
     heading: 'Roboto',
@@ -28,8 +28,8 @@ export const theme = extendTheme({
       body: {
         bg: 'gray.50',
         color: 'gray.700',
-      }
-    }
+      },
+    },
   },
   // config: {
   //   useSystemColorMode: true,

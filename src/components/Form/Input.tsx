@@ -7,9 +7,14 @@ import {
   Input as ChakraInput,
   InputGroup,
   InputProps as ChakraInputProps,
-  InputRightElement
+  InputRightElement,
 } from "@chakra-ui/react";
-import { forwardRef, ForwardRefRenderFunction, ReactNode, useState } from "react";
+import {
+  forwardRef,
+  ForwardRefRenderFunction,
+  ReactNode,
+  useState,
+} from "react";
 import { FieldError } from "react-hook-form";
 
 interface InputProps extends ChakraInputProps {
@@ -20,13 +25,16 @@ interface InputProps extends ChakraInputProps {
   rightAddon?: ReactNode;
 }
 
-const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({ name, label, type, error, leftAddon, rightAddon, ...rest }, ref) => {
-  const [show, setShow] = useState(false)
-  const handleClick = () => setShow(!show)
+const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
+  { name, label, type, error, leftAddon, rightAddon, ...rest },
+  ref
+) => {
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
 
   return (
-    <FormControl isInvalid={!!error} >
-      {label && <FormLabel htmlFor={rest.id ?? name} >{label}</FormLabel>}
+    <FormControl isInvalid={!!error}>
+      {label && <FormLabel htmlFor={rest.id ?? name}>{label}</FormLabel>}
 
       <InputGroup>
         {leftAddon}
@@ -36,25 +44,24 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({ nam
           variant="outline"
           id={name}
           name={name}
-          _focus={{ borderColor: "teal.200", borderWidth: '2px' }}
-          type={show ? 'text' : type}
+          _focus={{ borderColor: "teal.200", borderWidth: "2px" }}
+          type={show ? "text" : type}
           {...rest}
         />
 
-        {(type === 'password') ? (
-          <InputRightElement width='4.5rem'>
-            <Button h='1.75rem' size='sm' onClick={handleClick}>
-              {show ? 'Hide' : 'Show'}
+        {type === "password" ? (
+          <InputRightElement width="4.5rem">
+            <Button h="1.75rem" size="sm" onClick={handleClick}>
+              {show ? "Hide" : "Show"}
             </Button>
-       
           </InputRightElement>
         ) : (
           rightAddon
         )}
-
       </InputGroup>
-      {error && (<FormErrorMessage>{error.message}</FormErrorMessage>)}
-    </FormControl>);
-}
+      {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
+    </FormControl>
+  );
+};
 
-export const Input = forwardRef(InputBase)
+export const Input = forwardRef(InputBase);

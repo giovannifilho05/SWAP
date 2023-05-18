@@ -1,5 +1,5 @@
-import axios, { AxiosError } from "axios";
-import { parseCookies, setCookie } from "nookies";
+import axios, { AxiosError } from 'axios'
+import { parseCookies, setCookie } from 'nookies'
 // import { signOut } from "../contexts/AuthContext";
 // import { AuthTokenError } from "./errors/AuthTokenError";
 
@@ -16,7 +16,7 @@ import { parseCookies, setCookie } from "nookies";
 // let failedRequestQueue: FailedRequestQueue[] = []
 
 export function setupAPIClient(ctx = undefined) {
-  let cookies = parseCookies(ctx)
+  const cookies = parseCookies(ctx)
 
   const api = axios.create({
     baseURL: 'http://localhost:3000/api',

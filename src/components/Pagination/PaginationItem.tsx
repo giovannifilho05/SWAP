@@ -1,9 +1,9 @@
-import { Button } from "@chakra-ui/react";
+import { Button } from '@chakra-ui/react'
 
 interface PaginationItemProps {
-  number: number;
-  isCurrent?: boolean;
-  onPageChange: (page: number) => void;
+  number: number
+  isCurrent?: boolean
+  onPageChange: (page: number) => void
 }
 
 export function PaginationItem({

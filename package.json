@@ -35,8 +35,9 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@rocketseat/eslint-config": "^1.2.0",
     "@svgr/webpack": "^6.5.1",
-    "eslint": "8.21.0",
+    "eslint": "^8.40.0",
     "eslint-config-next": "12.2.4"
   }
 }

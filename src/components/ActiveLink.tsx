@@ -12,17 +12,18 @@ export function ActiveLink({
   shouldMatchExatcHref = false,
   ...rest
 }: ActiveLinkProps) {
-  const { asPath } = useRouter()
-  let isActive = false
+  const { asPath } = useRouter();
+  let isActive = false;
 
   if (shouldMatchExatcHref && (asPath === rest.href || asPath === rest.as)) {
-    isActive = true
+    isActive = true;
   }
 
-  if (!shouldMatchExatcHref &&
-    (asPath.startsWith(String(rest.href)) ||
-      asPath.startsWith(String(rest.as)))) {
-    isActive = true
+  if (
+    !shouldMatchExatcHref &&
+    (asPath.startsWith(String(rest.href)) || asPath.startsWith(String(rest.as)))
+  ) {
+    isActive = true;
   }
 
   return (
@@ -31,5 +32,5 @@ export function ActiveLink({
         color: isActive ? "teal.500" : "gray.500",
       })}
     </Link>
-  )
+  );
 }
