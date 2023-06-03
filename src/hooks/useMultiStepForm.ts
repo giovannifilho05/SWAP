@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, ReactFragment, useState } from 'react'
 
 type UseMultiStepFormReturn = {
   isLastStep: boolean
@@ -25,7 +25,7 @@ export function useMultiStepForm(
 
   function prevStep() {
     setCurrentStep((prev) => {
-      if (prev >= 0) return prev
+      if (prev <= 0) return prev
 
       return prev - 1
     })

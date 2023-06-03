@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -18,13 +19,12 @@ import { FieldError, SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { FcGoogle } from 'react-icons/fc'
-
-import { Input } from '../../components/Form/Input'
-import { Logo } from '../../components/Header/Logo'
-import { useAuth } from '../../hooks/useAuth'
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import { api } from '../../services/api'
+
+import { Input } from '@components/Form/Input'
+import { Logo } from '@components/Header/Logo'
+import { useAuth } from '@hooks/useAuth'
+import { api } from '@services/api'
 import { CreateUserResponse } from '../api/user'
 
 type SignUpFormData = {

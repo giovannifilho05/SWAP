@@ -36,7 +36,7 @@ export function Header() {
           />
         )}
 
-        <Logo w="64" color="teal.500" />
+        <Logo w="64" color="teal.500" cursor="pointer" />
 
         {isWideVersion && <SearchBox />}
 

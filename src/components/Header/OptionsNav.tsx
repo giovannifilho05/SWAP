@@ -16,7 +16,7 @@ export function OptionsNav() {
       borderRightWidth={1}
       borderColor="teal.700"
     >
-      <Link href="/newProject">
+      {/* <Link href="/">
         <IconButton
           aria-label="Adicionar novo projeto"
           icon={<RiNotificationLine fontSize="25px" />}
@@ -24,8 +24,8 @@ export function OptionsNav() {
           bg="transparent"
           _hover={{ color: 'teal.800' }}
         />
-      </Link>
-      <Link href="/newProject">
+      </Link> */}
+      <Link href="/project/create">
         <IconButton
           aria-label="Adicionar novo projeto"
           icon={<RiAddCircleFill fontSize="25px" />}

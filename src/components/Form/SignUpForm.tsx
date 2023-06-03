@@ -5,54 +5,54 @@ import {
   Button,
   InputLeftAddon,
   VStack,
-} from "@chakra-ui/react";
-import { Input } from "./Input";
-import { Select } from "./Select";
-import { FieldError, SubmitHandler, useForm } from "react-hook-form";
-import InputMask from "react-input-mask";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { isCPFValid, onlyNumbers } from "../../utils/usefulMethods";
-import { Roles } from "../../contexts/AuthContext";
+} from '@chakra-ui/react'
+import { Input } from './Input'
+import { Select } from './Select'
+import { FieldError, SubmitHandler, useForm } from 'react-hook-form'
+import InputMask from 'react-input-mask'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { isCPFValid, onlyNumbers } from '../../utils/usefulMethods'
+import { Roles } from '../../contexts/AuthContext'
 
 export type PersonalData = {
-  name: string;
-  lastName: string;
-  cpf: string;
-  phone: string;
-  userType: string;
-};
+  name: string
+  lastName: string
+  cpf: string
+  phone: string
+  userType: string
+}
 
 interface SignUpFormProps {
-  onSubmit: SubmitHandler<PersonalData>;
-  defaultValues?: Partial<PersonalData>;
+  onSubmit: SubmitHandler<PersonalData>
+  defaultValues?: Partial<PersonalData>
 }
 
 const signUpFormSchema = yup.object().shape({
   name: yup
     .string()
-    .matches(/^[a-zA-z]{3,15}$/, "Insira um nome válido")
-    .required("Nome é obrigatório."),
+    .matches(/^[a-zA-z]{3,15}$/, 'Insira um nome válido')
+    .required('Nome é obrigatório.'),
   lastName: yup
     .string()
-    .matches(/^[a-zA-z]{3,15}$/, "Insira um sobrenome válido")
-    .required("Sobrenome é obrigatório."),
+    .matches(/^[a-zA-z]{3,15}$/, 'Insira um sobrenome válido')
+    .required('Sobrenome é obrigatório.'),
   cpf: yup
     .string()
-    .required("CPF é obrigatório.")
-    .test("CPF válido", "CPF inválido", (value) => isCPFValid(value)),
+    .required('CPF é obrigatório.')
+    .test('CPF válido', 'CPF inválido', (value) => isCPFValid(value)),
   phone: yup
     .string()
-    .required("Telefone é obrigatório.")
-    .test("Telefone válido", "Telefone inválido", (value) => {
-      const numbers = onlyNumbers(value);
-      return numbers.length === 11; // 11 dígitos
+    .required('Telefone é obrigatório.')
+    .test('Telefone válido', 'Telefone inválido', (value) => {
+      const numbers = onlyNumbers(value)
+      return numbers.length === 11 // 11 dígitos
     }),
   userType: yup
     .string()
     .oneOf(Object.keys(Roles))
-    .required("O Tipo do Usuário é obrigatório."),
-});
+    .required('O Tipo do Usuário é obrigatório.'),
+})
 
 export function SignUpForm({ defaultValues, onSubmit }: SignUpFormProps) {
   const {
@@ -62,7 +62,7 @@ export function SignUpForm({ defaultValues, onSubmit }: SignUpFormProps) {
   } = useForm({
     resolver: yupResolver(signUpFormSchema),
     defaultValues,
-  });
+  })
 
   return (
     <Flex as="form" w="100%" flexDir="column" onSubmit={handleSubmit(onSubmit)}>
@@ -76,13 +76,13 @@ export function SignUpForm({ defaultValues, onSubmit }: SignUpFormProps) {
             name="name"
             label="Nome"
             error={errors.name as FieldError}
-            {...register("name")}
+            {...register('name')}
           />
           <Input
             name="lastName"
             label="Sobrenome"
             error={errors.lastName as FieldError}
-            {...register("lastName")}
+            {...register('lastName')}
           />
         </HStack>
 
@@ -97,7 +97,7 @@ export function SignUpForm({ defaultValues, onSubmit }: SignUpFormProps) {
               alwaysShowMask={false}
               maskPlaceholder="___.___.___-__"
               error={errors.cpf as FieldError}
-              {...register("cpf")}
+              {...register('cpf')}
             />
             <Input
               as={InputMask}
@@ -109,7 +109,7 @@ export function SignUpForm({ defaultValues, onSubmit }: SignUpFormProps) {
               alwaysShowMask={false}
               maskPlaceholder="(__) _ ____-____"
               error={errors.phone as FieldError}
-              {...register("phone")}
+              {...register('phone')}
             />
           </HStack>
 
@@ -118,7 +118,7 @@ export function SignUpForm({ defaultValues, onSubmit }: SignUpFormProps) {
             placeholder="Selecione um tipo"
             label="Tipo do Usuário"
             error={errors.userType as FieldError}
-            {...register("userType")}
+            {...register('userType')}
           >
             {Object.keys(Roles).map((role) => (
               <option value={role} key={Roles[role]}>
@@ -141,5 +141,5 @@ export function SignUpForm({ defaultValues, onSubmit }: SignUpFormProps) {
         </Button>
       </HStack>
     </Flex>
-  );
+  )
 }

@@ -12,17 +12,18 @@ import {
   Heading,
   Box,
 } from '@chakra-ui/react'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { FieldError, SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { FcGoogle } from 'react-icons/fc'
 
-import { Input } from '../components/Form/Input'
-import { Logo } from '../components/Header/Logo'
-import { useAuth } from '../hooks/useAuth'
-import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+import { Input } from '@components/Form/Input'
+import { Logo } from '@components/Header/Logo'
+import { useAuth } from '@hooks/useAuth'
 
 type SignInFormData = {
   email: string
@@ -55,7 +56,6 @@ const SignIn: NextPage = () => {
   useEffect(() => {
     const { success, redirect } = isNotAuthenticated()
 
-    console.log({ success, redirect })
     if (!isLoading) {
       if (!success) router.replace(redirect.path)
     }
@@ -102,7 +102,7 @@ const SignIn: NextPage = () => {
         >
           <VStack
             flex={1}
-            // bgColor="blue"
+          // bgColor="blue"
           >
             <Logo fontSize={['6xl', '7xl']} />
           </VStack>

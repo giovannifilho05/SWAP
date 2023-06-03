@@ -1,18 +1,18 @@
 import { NextPage } from 'next'
 import Head from 'next/head'
-
-import { Flex, SimpleGrid } from '@chakra-ui/react'
-import { Header } from '../components/Header'
-import { SideBar } from '../components/SideBar'
-import { UserCard } from '../components/UserCard'
-import { useAuth } from '../hooks/useAuth'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useQuery } from '@tanstack/react-query'
 import { collection, getDocs, query, where } from 'firebase/firestore'
-import { db } from '../services/firebase'
-import { User } from '../contexts/UsersContext'
-import { useUsers } from '../hooks/useUsers'
+import { db } from '@services/firebase'
+import { Flex, SimpleGrid } from '@chakra-ui/react'
+
+import { Header } from '@components/Header'
+import { SideBar } from '@components/SideBar'
+import { UserCard } from '@components/UserCard'
+import { User } from '@contexts/UsersContext'
+import { useAuth } from '@hooks/useAuth'
+import { useUsers } from '@hooks/useUsers'
 
 const Dashboard: NextPage = () => {
   const { isLoading, user, isAuthenticated } = useAuth()
@@ -36,7 +36,7 @@ const Dashboard: NextPage = () => {
 
       return users
     },
-    staleTime: 1000 * 60 * 10, // 2 minuto
+    staleTime: 1000 * 60 * 10, // 10 minuto
     retry: true,
     enabled: !!user,
   })

@@ -1,21 +1,21 @@
-import { Box, HStack, Stack, Text } from "@chakra-ui/react";
-import { PaginationItem } from "./PaginationItem";
+import { Box, HStack, Stack, Text } from '@chakra-ui/react'
+import { PaginationItem } from './PaginationItem'
 
 interface PaginationProps {
-  totalCountOfRegisters: number;
-  registersPerPage?: number;
-  currentPage?: number;
-  onPageChange: (page: number) => void;
+  totalCountOfRegisters: number
+  registersPerPage?: number
+  currentPage?: number
+  onPageChange: (page: number) => void
 }
 
-const siblingsCount = 2;
+const siblingsCount = 2
 
 function generatePagesArray(from: number, to: number) {
   return [...new Array(to - from)]
     .map((_, index) => {
-      return from + index + 1;
+      return from + index + 1
     })
-    .filter((page) => page > 0);
+    .filter((page) => page > 0)
 }
 
 export function Pagination({
@@ -24,24 +24,24 @@ export function Pagination({
   registersPerPage = 10,
   onPageChange,
 }: PaginationProps) {
-  const lastPage = Math.ceil(totalCountOfRegisters / registersPerPage);
+  const lastPage = Math.ceil(totalCountOfRegisters / registersPerPage)
 
   const previousPages =
     currentPage > 1
       ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1)
-      : [];
+      : []
 
   const nextPages =
     currentPage < lastPage
       ? generatePagesArray(
           currentPage,
-          Math.min(currentPage + siblingsCount, lastPage)
+          Math.min(currentPage + siblingsCount, lastPage),
         )
-      : [];
+      : []
 
   return (
     <Stack
-      direction={["column", "row"]}
+      direction={['column', 'row']}
       mt="8"
       justify="space-between"
       align="center"
@@ -49,13 +49,13 @@ export function Pagination({
     >
       <Box>
         <strong>{(currentPage - 1) * registersPerPage + 1}</strong>
-        {" - "}
+        {' - '}
         <strong>
           {currentPage * registersPerPage < totalCountOfRegisters
             ? currentPage * registersPerPage
             : totalCountOfRegisters}
         </strong>
-        {" de "}
+        {' de '}
         <strong>{totalCountOfRegisters}</strong>
       </Box>
       <HStack spacing="2">
@@ -78,7 +78,7 @@ export function Pagination({
                 number={page}
                 onPageChange={onPageChange}
               />
-            );
+            )
           })}
 
         <PaginationItem
@@ -95,7 +95,7 @@ export function Pagination({
                 number={page}
                 onPageChange={onPageChange}
               />
-            );
+            )
           })}
 
         {currentPage + siblingsCount < lastPage && (
@@ -110,5 +110,5 @@ export function Pagination({
         )}
       </HStack>
     </Stack>
-  );
+  )
 }

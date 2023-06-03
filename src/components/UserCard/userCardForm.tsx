@@ -21,7 +21,7 @@ export interface FormRefProps {
   onSave: () => Promise<void>
 }
 
-function UserCardFormComponent({}, ref: Ref<FormRefProps>) {
+function UserCardFormComponent({ }, ref: Ref<FormRefProps>) {
   const { user: currentUser } = useAuth()
   const { selectedUser: user } = useUsers()
   const [userType, setUserType] = useState(user.userType)
