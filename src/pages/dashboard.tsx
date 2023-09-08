@@ -11,7 +11,8 @@ import { Center,
   CardFooter,
   Heading,
   Image, 
-  Text } from "@chakra-ui/react";
+  Text, 
+  Button } from "@chakra-ui/react";
 import { Header } from "../components/Header";
 import { SideBar } from "../components/SideBar";
 import { useAuth } from "../hooks/useAuth";
@@ -46,7 +47,7 @@ const Dashboard: NextPage = () => {
             ? (
               <SimpleGrid flex="1" gap="4" 
               minChildWidth="320px" 
-              alignItems="flex-start"
+              alignItems="center"
               padding='30px'>
                 <Card backgroundColor='gray.100'
                 borderColor='black'
@@ -55,43 +56,43 @@ const Dashboard: NextPage = () => {
                 borderRadius='3xl'>
 
                   <CardHeader>
-                    <Flex align='center' justify='space-between'>
-                      <Heading fontSize='xxx-large' 
-                        color="teal.500"
-                        marginStart='30px'
-                        textAlign='center'                    
-                      >
-                        O Instituto
-                      </Heading>
-
-                      <Image float='right'
-                      align='center'
-                      alt='imagem do projeto'
-                      width='375px'
-                      height='250px'
-                      src='https://leitorcompulsivo.com.br/wp-content/uploads/2019/11/o_Instituto_King.jpg'
-                      objectFit='contain'
-                      marginLeft='50px'
-                      />
-                    </Flex>
+                    <Heading fontSize='xxx-large' 
+                      color="teal.500"
+                      marginStart='30px'
+                      textAlign="center"
+                    > O Instituto
+                    </Heading>
                   </CardHeader>
 
-                  <CardBody textAlign='justify'>
+                  <CardBody textAlign='justify'
+                  marginLeft='30px'>
+                    <Image 
+                      align='center'
+                      alt='imagem do projeto'
+                      width='850px'
+                      height='250px'
+                      src='https://leitorcompulsivo.com.br/wp-content/uploads/2019/11/o_Instituto_King.jpg'
+                    />
+
+                    <br/>
+
                     <Text as='b' 
+                    marginRight='30px'
                     noOfLines={[1, 2, 3, 4]}> 
                         No meio da noite, em uma casa no subúrbio de Minneapolis, um grupo de invasores assassina os pais de Luke e sequestra silenciosamente o menino de doze anos. A operação leva menos de dois minutos.
                       Quando Luke acorda, ele está no Instituto, em um quarto que parece muito o dele, exceto pelo fato de que não tem janela. E do lado de fora tem outras portas, e atrás delas, outras crianças com talentos especiais, que chegaram àquele lugar do mesmo jeito que Luke. O grupo formado por ele, Kalisha, Nick, George, Iris e o caçula, Avery Dixon, de apenas dez anos, está na Parte da Frente. Outros jovens, Luke descobre, foram levados para a Parte de Trás e nunca mais vistos.
                       Nessa instituição sinistra, a equipe se dedica impiedosamente a extrair dessas crianças toda a força de seus poderes paranormais. Não existem escrúpulos. Conforme cada nova vítima vai desaparecendo para a Parte de Trás, Luke fica mais e mais desesperado para escapar e procurar ajuda. Mas até hoje ninguém nunca conseguiu fugir do Instituto.
                       Tão aterrorizante quanto A incendiária e tão espetacular quando It: a Coisa, este novo livro de Stephen King mostra um mundo onde o bem nem sempre vence o mal.
                     </Text>
-                  </CardBody>
-
-                  <CardFooter>
                     <Text fontSize='xl'
                     color='teal.500'
                     textAlign='left'
-                    marginLeft='10px'
                     >Stephen King</Text>
+                  </CardBody>
+
+                  <CardFooter alignSelf='center'>
+                    <Button colorScheme='teal'
+                    size='lg'> Ver projeto</Button>
                   </CardFooter>
                 </Card>
               </SimpleGrid>
@@ -100,8 +101,6 @@ const Dashboard: NextPage = () => {
                 <Spinner size='xl' color="teal.500" />
               </Center>
           )}
-
-
         </Flex>
       </Flex>
     </>
